@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "npx prisma generate --schema=./server/prisma/schema.prisma && npx prisma db push --schema=./server/prisma/schema.prisma && node server/index.js",
-    "build": "npm install --prefix client && npm run build --prefix client && npx prisma generate --schema=./server/prisma/schema.prisma"
+    "build": "npm install --prefix client && npm run build --prefix client"
   },
   "dependencies": {
     "express": "^4.18.2",
