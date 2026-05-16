@@ -19,5 +19,5 @@ RUN npm run build
 
 EXPOSE 5000
 
-# Push schema to DB and start server
-CMD npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss && npm start
+# Start server
+CMD npm start
