@@ -68,7 +68,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const dynamicPort = process.env.PORT || 8080;
 app.listen(dynamicPort, '0.0.0.0', () => {
   console.log(`Server running on dynamic port ${dynamicPort}`);
 });
