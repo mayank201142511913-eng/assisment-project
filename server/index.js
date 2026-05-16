@@ -45,7 +45,13 @@ if (process.env.NODE_ENV === 'production') {
     if (global.STARTUP_ERROR) {
       return res.status(500).send(`<h1>Startup Error</h1><pre style="white-space: pre-wrap; word-wrap: break-word;">${global.STARTUP_ERROR}</pre>`);
     }
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+    const indexPath = path.join(__dirname, '../client/dist', 'index.html');
+    const fs = require('fs');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(200).send(`<h1>Backend is LIVE!</h1><p>But the frontend React build is missing! The server is running perfectly on Railway.</p>`);
+    }
   });
 } else {
   // If not production, still show the error
@@ -53,7 +59,7 @@ if (process.env.NODE_ENV === 'production') {
     if (global.STARTUP_ERROR) {
       return res.status(500).send(`<h1>Startup Error</h1><pre style="white-space: pre-wrap; word-wrap: break-word;">${global.STARTUP_ERROR}</pre>`);
     }
-    res.send("API is running");
+    res.send("<h1>API is running</h1><p>Not in production mode.</p>");
   });
 }
 
