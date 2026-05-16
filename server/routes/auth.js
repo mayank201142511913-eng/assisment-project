@@ -4,7 +4,13 @@ const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL || "postgresql://postgres:mtWMjKhBalBnOqKXGDTtoahJvmTUHerp@postgres.railway.internal:5432/railway"
+    }
+  }
+});
 
 // Register
 router.post('/register', async (req, res) => {
@@ -35,7 +41,8 @@ router.post('/register', async (req, res) => {
       user: { id: user.id, email: user.email, name: user.name, role: user.role }
     });
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    console.error('REGISTER ERROR:', error.message, error.stack);
+    res.status(500).json({ error: 'Server error: ' + error.message });
   }
 });
 
