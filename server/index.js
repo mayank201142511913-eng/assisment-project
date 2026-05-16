@@ -26,6 +26,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+const dynamicPort = process.env.PORT || 8080;
+app.listen(dynamicPort, '0.0.0.0', () => {
+  console.log(`Server running on dynamic port ${dynamicPort}`);
 });
+
+// Also bind to 5000 to catch traffic if Railway Proxy is caching the old Dockerfile Target Port
+if (dynamicPort != 5000) {
+  app.listen(5000, '0.0.0.0', () => {
+    console.log(`Server ALSO running on fallback port 5000`);
+  }).on('error', () => {});
+}
