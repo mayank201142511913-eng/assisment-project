@@ -23,6 +23,11 @@ try {
 app.use(cors());
 app.use(express.json());
 
+// FORCED TEST ROUTE
+app.get('/', (req, res) => {
+  res.send("<h1>V2 BACKEND IS LIVE!</h1><p>If you see this, the server is working and updating!</p>");
+});
+
 // API Routes
 app.get('/api/health', (req, res) => res.status(200).send('OK'));
 
