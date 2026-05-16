@@ -25,9 +25,17 @@ app.use(express.json());
 
 // API Routes
 app.get('/api/health', (req, res) => res.status(200).send('OK'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/projects', require('./routes/projects'));
-app.use('/api/tasks', require('./routes/tasks'));
+
+try {
+  app.use('/api/auth', require('./routes/auth'));
+  app.use('/api/projects', require('./routes/projects'));
+  app.use('/api/tasks', require('./routes/tasks'));
+} catch (routeError) {
+  console.error("Failed to load routes (likely because Prisma didn't generate):", routeError);
+  if (!global.STARTUP_ERROR) {
+    global.STARTUP_ERROR = "Route Loading Error: " + routeError.message + "\n\n" + routeError.stack;
+  }
+}
 
 // Serve React App in Production
 if (process.env.NODE_ENV === 'production') {
