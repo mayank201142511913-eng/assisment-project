@@ -3,7 +3,13 @@ const { PrismaClient } = require('@prisma/client');
 const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL || "postgresql://postgres:mtWMjKhBalBnOqKXGDTtoahJvmTUHerp@postgres.railway.internal:5432/railway"
+    }
+  }
+});
 
 // Get all projects for current user (either as owner or team member)
 router.get('/', authenticate, async (req, res) => {
