@@ -6,7 +6,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const dynamicPort = process.env.PORT || 8080;
+
+// Run Prisma commands synchronously before starting API
+try {
+  const { execSync } = require('child_process');
+  console.log("Generating Prisma Client...");
+  execSync('npx prisma generate --schema=./server/prisma/schema.prisma', { stdio: 'pipe' });
+  console.log("Pushing database schema...");
+  execSync('npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss', { stdio: 'pipe' });
+} catch (error) {
+  console.error("Prisma startup failed!");
+  global.STARTUP_ERROR = error.message + "\n\n" + (error.stdout ? error.stdout.toString() : '') + "\n\n" + (error.stderr ? error.stderr.toString() : '');
+}
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +34,18 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
   
   app.get('*', (req, res) => {
+    if (global.STARTUP_ERROR) {
+      return res.status(500).send(`<h1>Startup Error</h1><pre style="white-space: pre-wrap; word-wrap: break-word;">${global.STARTUP_ERROR}</pre>`);
+    }
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
+} else {
+  // If not production, still show the error
+  app.get('*', (req, res) => {
+    if (global.STARTUP_ERROR) {
+      return res.status(500).send(`<h1>Startup Error</h1><pre style="white-space: pre-wrap; word-wrap: break-word;">${global.STARTUP_ERROR}</pre>`);
+    }
+    res.send("API is running");
   });
 }
 
