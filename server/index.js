@@ -11,10 +11,11 @@ const dynamicPort = process.env.PORT || 8080;
 // Run Prisma commands synchronously before starting API
 try {
   const { execSync } = require('child_process');
+  const dbUrl = process.env.DATABASE_URL || "postgresql://postgres:mtWMjKhBalBnOqKXGDTtoahJvmTUHerp@postgres.railway.internal:5432/railway";
   console.log("Generating Prisma Client...");
   execSync('npx prisma generate --schema=./server/prisma/schema.prisma', { stdio: 'pipe' });
   console.log("Pushing database schema...");
-  execSync('npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss', { stdio: 'pipe' });
+  execSync(`npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss --url="${dbUrl}"`, { stdio: 'pipe' });
 } catch (error) {
   console.error("Prisma startup failed!");
   global.STARTUP_ERROR = error.message + "\n\n" + (error.stdout ? error.stdout.toString() : '') + "\n\n" + (error.stderr ? error.stderr.toString() : '');
