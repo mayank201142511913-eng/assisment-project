@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "npx prisma generate --schema=./server/prisma/schema.prisma && npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss && node server/index.js",
-    "build": "echo 'Skipping frontend build to force backend deploy'"
+    "build": "npm install --prefix client && NODE_OPTIONS=--max-old-space-size=256 npm run build --prefix client"
   },
   "dependencies": {
     "express": "^4.18.2",
