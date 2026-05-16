@@ -4,8 +4,8 @@
   "description": "Full-Stack Team Task Manager",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "build": "npx prisma generate --schema=./server/prisma/schema.prisma && npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss && npm install --prefix client && npm run build --prefix client"
+    "start": "npx prisma generate --schema=./server/prisma/schema.prisma && npx prisma db push --schema=./server/prisma/schema.prisma --accept-data-loss && node server/index.js",
+    "build": "echo 'Skipping frontend build to force backend deploy'"
   },
   "dependencies": {
     "express": "^4.18.2",
